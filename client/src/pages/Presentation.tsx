@@ -461,18 +461,18 @@ const TeamSlide = () => (
       <h2 className="text-4xl font-bold text-slate-900 mb-16">The Team</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
         {[
-          { name: "Mo'men", role: "CEO", color: "bg-blue-100" },
-          { name: "Karim", role: "CTO", color: "bg-green-100" },
-          { name: "Dr. Ramesh", role: "Advisor", color: "bg-yellow-100" },
-          { name: "Dr. Farah", role: "Clinical Lead", color: "bg-purple-100" }
+          { name: "Mo'men - 51%", role: "CEO", color: "bg-blue-100",img:"/momen.png" },
+          { name: "Karim - 49%", role: "CTO", color: "bg-green-100" ,img:"/karim.png"},
+          { name: "Ramesh", role: "Advisor", color: "bg-yellow-100",img:"/Picture11.png" },
+          { name: "Farah", role: "Clinical Lead", color: "bg-purple-100",img:"/farah.jpeg" }
         ].map((member, i) => (
           <div key={i} className="group cursor-pointer">
-            <div className={`aspect-[3/4] ${member.color} rounded-2xl mb-4 overflow-hidden relative`}>
+            <div className={`aspect-square ${member.color} rounded-2xl mb-4 overflow-hidden relative`}>
                {/* Placeholder Avatar */}
                <img 
-                 src={`https://images.unsplash.com/photo-${1500000000000 + i}?auto=format&fit=crop&q=80&w=400`}
+                 src={member.img}
                  alt={member.name}
-                 className="w-full h-full object-cover mix-blend-multiply opacity-50 group-hover:scale-110 transition-transform duration-500"
+                 className="w-full h-full object-cover mix-blend-multiply opacity-100 group-hover:scale-110 transition-transform duration-500"
                />
             </div>
             <h3 className="text-xl font-bold text-slate-900">{member.name}</h3>
@@ -490,21 +490,22 @@ const FinancialsSlide = () => (
       <h2 className="text-4xl font-bold text-slate-900 mb-12 text-center">Financial Projections</h2>
       <div className="relative h-64 flex items-end justify-between gap-4 md:gap-8 px-4">
         {[
-          { year: "Year 1", val: 4.1, h: "10%" },
-          { year: "Year 2", val: 8.5, h: "20%" },
-          { year: "Year 3", val: 15.2, h: "35%" },
-          { year: "Year 4", val: 24.8, h: "60%" },
-          { year: "Year 5", val: 39.3, h: "100%" }
+          { year: "Year 1", val: 4.1, h: "15%" },
+          { year: "Year 2", val: 7.4, h: "25%" },
+          { year: "Year 3", val: 14.6, h: "35%" },
+          { year: "Year 4", val: 24.6, h: "60%" },
+          { year: "Year 5", val: 39.3, h: "120%" }
         ].map((bar, i) => (
-          <div key={i} className="flex-1 flex flex-col justify-end group">
-            <div className="text-center mb-2 opacity-0 group-hover:opacity-100 transition-opacity font-bold text-primary">
+          <div key={i} className="flex-1 flex flex-col justify-end group h-full">
+            <div className="text-center mb-2 opacity-100  transition-opacity font-bold text-primary">
               ${bar.val}M
             </div>
-            <motion.div 
+            <motion.div
               initial={{ height: 0 }}
-              whileInView={{ height: bar.h }}
-              transition={{ delay: i * 0.1, duration: 1 }}
-              className="bg-gradient-to-t from-primary to-cyan-400 rounded-t-2xl w-full relative group-hover:shadow-lg transition-shadow"
+              animate={{ height: bar.h }}
+              transition={{ delay: i * 0.12, duration: 0.9 }}
+              className="bg-gradient-to-t from-primary to-cyan-400 rounded-t-2xl w-full relative group-hover:shadow-lg transition-shadow overflow-hidden"
+              style={{ willChange: "height" }}
             >
               <div className="absolute bottom-4 left-0 right-0 text-center text-white/90 font-bold text-sm md:text-base">
                 {bar.year}
@@ -514,10 +515,16 @@ const FinancialsSlide = () => (
         ))}
       </div>
       <div className="mt-12 p-6 bg-white rounded-2xl border border-slate-200 flex justify-between items-center">
-        <div>
+       <div className="flex flex-row  gap-10">
+         <div>
           <p className="text-slate-500">Projected Revenue by Year 5</p>
           <p className="text-3xl font-bold text-slate-900">$39.3 Million</p>
         </div>
+         <div>
+          <p className="text-slate-500">Gross Marging</p>
+          <p className="text-3xl font-bold text-slate-900">70%</p>
+        </div>
+       </div>
         <TrendingUp className="text-green-500 w-12 h-12" />
       </div>
     </div>
@@ -591,19 +598,46 @@ const AskSlide = () => (
         </div>
       </div>
       
-      <div className="grid md:grid-cols-2 gap-8 text-left max-w-2xl mx-auto">
+      <div className="grid md:grid-cols-3 gap-8 text-left  mx-auto w-full">
         <div className="flex gap-4 items-start">
           <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary mt-1">1</div>
           <div>
-            <h3 className="font-bold text-xl mb-1">Prototype Development</h3>
-            <p className="text-slate-400">Finalizing the MVP hardware and software stack.</p>
+            <h3 className="font-bold text-xl mb-1">Biocompatible prototype optimization</h3>
+            
           </div>
         </div>
         <div className="flex gap-4 items-start">
           <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary mt-1">2</div>
           <div>
-            <h3 className="font-bold text-xl mb-1">Clinical Trials</h3>
-            <p className="text-slate-400">Phase 1 trials with partner hospitals.</p>
+            <h3 className="font-bold text-xl mb-1">IP protection</h3>
+          </div>
+        </div>
+        <div className="flex gap-4 items-start">
+          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary mt-1">3</div>
+          <div>
+            <h3 className="font-bold text-xl mb-1">Local regulatory and compliance approvals</h3>
+
+          </div>
+        </div>
+        <div className="flex gap-4 items-start">
+          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary mt-1">4</div>
+          <div>
+            <h3 className="font-bold text-xl mb-1">Pre-clinical and clinical trials</h3>
+
+          </div>
+        </div>
+        <div className="flex gap-4 items-start">
+          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary mt-1">5</div>
+          <div>
+            <h3 className="font-bold text-xl mb-1">Clear European regulatory path</h3>
+
+          </div>
+        </div>
+        <div className="flex gap-4 items-start">
+          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary mt-1">5</div>
+          <div>
+            <h3 className="font-bold text-xl mb-1">Unlock Seed A</h3>
+
           </div>
         </div>
       </div>
