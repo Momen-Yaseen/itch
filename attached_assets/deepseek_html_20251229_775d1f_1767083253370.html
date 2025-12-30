@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neurobotix Technologies - Pitch Deck</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .bg-radial-grid {
+            background-image: radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.08) 1px, transparent 0);
+            background-size: 48px 48px;
+        }
+        
+        .slide-enter {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .note-popup {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-50 min-h-screen overflow-x-hidden">
+    <div class="absolute inset-0 bg-radial-grid pointer-events-none"></div>
+    <div class="absolute top-0 -right-1/4 w-3/5 h-3/5 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 px-12 py-6 flex justify-between items-center z-50 bg-gradient-to-b from-slate-950/95 to-transparent backdrop-blur-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-lg">
+                🧠
+            </div>
+            <span class="text-sm tracking-wider font-semibold">Neurobotix Technologies</span>
+        </div>
+        <div class="flex gap-4 items-center">
+            <button id="toggleNotes" class="px-4 py-2 text-xs tracking-wider uppercase rounded-md border border-blue-500/30 bg-transparent hover:bg-blue-500/20 transition-all">
+                Speaker Notes
+            </button>
+            <span id="slideCounter" class="text-xs opacity-50 font-mono">01 / 12</span>
+        </div>
+    </nav>
+
+    <!-- Main Slides Container -->
+    <main id="slidesContainer" class="min-h-screen flex flex-col justify-center px-8 md:px-20 py-32 max-w-7xl mx-auto relative z-10">
+        <!-- Slides will be dynamically inserted here -->
+    </main>
+
+    <!-- Navigation Buttons -->
+    <div class="fixed bottom-10 left-4 md:left-12 right-4 md:right-12 flex justify-between items-center z-50">
+        <button id="prevBtn" class="px-4 md:px-7 py-3 text-xs tracking-wider uppercase rounded-lg border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 transition-all font-semibold">
+            ← Previous
+        </button>
+        
+        <div id="slideDots" class="flex gap-2">
+            <!-- Dots will be dynamically generated -->
+        </div>
+
+        <button id="nextBtn" class="px-4 md:px-7 py-3 text-xs tracking-wider uppercase rounded-lg border border-transparent bg-gradient-to-r from-blue-500 to-purple-600 hover:opacity-90 transition-all font-semibold">
+            Next →
+        </button>
+    </div>
+
+    <!-- Speaker Notes Panel -->
+    <div id="notesPanel" class="fixed bottom-24 right-4 md:right-12 w-80 md:w-96 max-h-96 bg-slate-950/95 border border-blue-500/30 rounded-xl p-4 md:p-6 note-popup shadow-2xl overflow-auto z-50 hidden">
+        <div class="text-[10px] tracking-widest uppercase text-blue-400 mb-4 font-semibold">
+            Speaker Notes
+        </div>
+        <div id="notesContent" class="text-sm leading-relaxed opacity-80">
+            <!-- Notes content will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        // Slide data
+        const slides = [
+            {
+                id: 'title',
+                type: 'title',
+                headline: 'Neurobotix Technologies',
+                subline: 'Reinventing Neurovascular Interventions with Robotics & AI',
+                tagline: 'Precision robotics that saves lives, one procedure at a time',
+                notes: "Start strong with the problem magnitude. Make eye contact before stating the lives at stake."
+            },
+            {
+                id: 'problem',
+                type: 'problem',
+                headline: 'The Problem',
+                content: [
+                    { 
+                        label: 'A Silent Killer', 
+                        text: '15-18M people live with unruptured brain aneurysms globally. One ruptures every 18 minutes.',
+                        stat: '500K deaths/year'
+                    },
+                    { 
+                        label: 'Devastating Outcomes', 
+                        text: '50% of ruptures are fatal or cause permanent disability. Most occur without warning.',
+                        stat: '50% mortality'
+                    },
+                    { 
+                        label: 'Treatment Challenges', 
+                        text: 'Current procedures require manual navigation under heavy radiation, are time-intensive, and reactive rather than preventive.',
+                        stat: '2-4 hrs per procedure'
+                    }
+                ],
+                notes: "Emphasize human cost. Someone is having a rupture during this pitch."
+            },
+            {
+                id: 'solution',
+                type: 'solution',
+                headline: 'Our Solution',
+                content: 'We enable neurosurgeons to simulate first, reduce risk, and navigate precisely using AI-powered robotics with patient-specific digital twins.',
+                features: [
+                    { 
+                        icon: '🧠',
+                        title: 'Patient-Specific Simulation',
+                        desc: 'Digital twin technology maps unique vasculature before surgery'
+                    },
+                    { 
+                        icon: '🤖',
+                        title: 'Semi-Autonomous Navigation',
+                        desc: 'AI path planning with manual override—doctor always in control'
+                    },
+                    { 
+                        icon: '⚡',
+                        title: 'Smart Assistance',
+                        desc: 'Reduces human error, radiation exposure, and procedure time by 40%'
+                    }
+                ],
+                notes: "Demo digital twin if possible. Emphasize doctor control."
+            },
+            {
+                id: 'market',
+                type: 'market',
+                headline: 'Market Opportunity',
+                metrics: [
+                    { value: '$2.8B', label: 'Global Market (2024)', desc: 'Neurovascular devices', growth: '+7.2% CAGR' },
+                    { value: '1.8M', label: 'Target Patients (GCC)', desc: 'Living with aneurysms', growth: 'Aging population' },
+                    { value: '37.5%', label: 'Largest Segment', desc: 'Embolization & coiling devices', growth: 'Our entry point' }
+                ],
+                notes: "Aging population drives growth. We're at the intersection."
+            },
+            {
+                id: 'product',
+                type: 'product',
+                headline: 'How It Works',
+                steps: [
+                    { num: '01', title: 'Pre-Op Simulation', desc: 'Scan patient vasculature → Create digital twin → Plan optimal path' },
+                    { num: '02', title: 'AI-Guided Navigation', desc: 'Robotic system follows pre-planned route with real-time adjustments' },
+                    { num: '03', title: 'Precision Intervention', desc: 'Deploy coils/stents with sub-millimeter accuracy under physician control' }
+                ],
+                benefits: ['40% faster procedures', '60% less radiation', '99.2% navigation accuracy'],
+                notes: "Focus on workflow for business audience, ML for technical."
+            },
+            {
+                id: 'business',
+                type: 'business',
+                headline: 'Business Model',
+                model: 'Hardware-as-a-Service + Recurring software subscriptions',
+                economics: [
+                    { metric: 'Hardware Sale', value: '$500K per system', margin: '40%' },
+                    { metric: 'Annual Software', value: '$25K per hospital', margin: '85%' },
+                    { metric: 'Per-Procedure Fee', value: '$3K disposables', margin: '60%' }
+                ],
+                notes: "Software margin drives 10-year LTV once hardware is installed."
+            },
+            {
+                id: 'traction',
+                type: 'traction',
+                headline: 'Traction & Validation',
+                metrics: [
+                    { value: '6', label: 'Strategic Partners', growth: 'HMC, QBRI, QU, Sidra' },
+                    { value: '3', label: 'Pilot Sites Secured', growth: 'LOIs from Tier 1 hospitals' },
+                    { value: '$250K', label: 'Grant Funding', growth: 'QSTP & QRDI support' }
+                ],
+                milestones: [
+                    'Pre-clinical trials approved for Q3 2025',
+                    'MOPH regulatory pathway mapped',
+                    'Patent filed for AI navigation algorithm'
+                ],
+                notes: "HMC is Qatar's largest. Pre-clinical approval is the hardest gate."
+            },
+            {
+                id: 'financials',
+                type: 'financials',
+                headline: 'Financial Projections',
+                years: [
+                    { year: 'Year 1', revenue: '$4.1M', hospitals: '5 adopters', margin: '60%' },
+                    { year: 'Year 2', revenue: '$7.4M', hospitals: '5 recurring + 7 new', margin: '65%' },
+                    { year: 'Year 5', revenue: '$39.3M', hospitals: '75 total', margin: '70%' }
+                ],
+                notes: "Conservative 60% close vs 40% industry average. Profitable Year 3."
+            },
+            {
+                id: 'team',
+                type: 'team',
+                headline: 'The Team',
+                members: [
+                    { role: 'CEO & Co-Founder', name: "Mo'men (51%)", credential: 'QSTP backed, 8+ years medtech' },
+                    { role: 'CTO & Co-Founder', name: 'Karim (49%)', credential: 'JUNIA College, robotics PhD, 15 patents' },
+                    { role: 'Clinical Advisor', name: 'Dr. Ramesh', credential: 'Chief of Neurosurgery, HMC' },
+                    { role: 'Research Lead', name: 'Dr. Farah', credential: 'Qatar University, AI expert' }
+                ],
+                notes: "Ramesh: 1,000+ procedures. Karim's patents = defensibility."
+            },
+            {
+                id: 'ask',
+                type: 'ask',
+                headline: 'The Ask',
+                amount: '$1M Pre-Seed',
+                use: [
+                    { allocation: '40%', purpose: 'Biocompatible Prototype & IP' },
+                    { allocation: '35%', purpose: 'Clinical Trials & Regulatory' },
+                    { allocation: '25%', purpose: 'Team & Operations' }
+                ],
+                outcome: 'Gets us through MOPH approval and 3 clinical validations in 18 months',
+                notes: "$1M gets clinical validation + first customer. Unlocks Series A."
+            },
+            {
+                id: 'close',
+                type: 'close',
+                headline: 'Neurobotix Technologies',
+                tagline: "Every 18 minutes, a brain aneurysm ruptures. We're building the technology to stop it.",
+                contact: 'research@neurobotix.technologies  |  +974 505 695 786',
+                notes: "End with emotion. Every 18 minutes matters. Hand out materials."
+            }
+        ];
+
+        // State
+        let currentSlide = 0;
+        let showNotes = false;
+
+        // DOM Elements
+        const slidesContainer = document.getElementById('slidesContainer');
+        const slideCounter = document.getElementById('slideCounter');
+        const slideDots = document.getElementById('slideDots');
+        const notesPanel = document.getElementById('notesPanel');
+        const notesContent = document.getElementById('notesContent');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const toggleNotes = document.getElementById('toggleNotes');
+
+        // Initialize
+        function init() {
+            renderSlides();
+            renderSlideDots();
+            updateSlide();
+            setupEventListeners();
+        }
+
+        // Render all slides
+        function renderSlides() {
+            slides.forEach((slide, index) => {
+                const slideElement = document.createElement('div');
+                slideElement.className = `slide slide-${slide.type} absolute inset-0 px-8 md:px-20 py-32 ${index === 0 ? 'block' : 'hidden'}`;
+                slideElement.id = `slide-${index}`;
+                slideElement.innerHTML = generateSlideHTML(slide);
+                slidesContainer.appendChild(slideElement);
+            });
+        }
+
+        // Generate slide HTML based on type
+        function generateSlideHTML(slide) {
+            switch(slide.type) {
+                case 'title':
+                    return `
+                        <div class="text-center slide-enter">
+                            <div class="inline-block px-4 py-2 bg-blue-500/15 border border-blue-500/30 rounded-full text-xs tracking-widest uppercase mb-8 text-blue-400">
+                                Medical Robotics | AI-Powered
+                            </div>
+                            <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-r from-slate-50 to-blue-400 bg-clip-text text-transparent">
+                                ${slide.headline}
+                            </h1>
+                            <p class="text-xl md:text-2xl opacity-70 max-w-3xl mx-auto mb-12">
+                                ${slide.subline}
+                            </p>
+                            <p class="text-sm opacity-50 italic max-w-2xl mx-auto">
+                                ${slide.tagline}
+                            </p>
+                        </div>
+                    `;
+                
+                case 'problem':
+                    return `
+                        <div class="slide-enter">
+                            <h2 class="text-xs tracking-widest uppercase text-blue-400 mb-8 md:mb-12 font-semibold">
+                                ${slide.headline}
+                            </h2>
+                            <div class="flex flex-col gap-6 md:gap-10">
+                                ${slide.content.map(item => `
+                                    <div class="grid grid-cols-1 md:grid-cols-[120px_1fr] gap-6 md:gap-8 p-6 md:p-8 bg-white/5 border border-blue-500/15 rounded-xl backdrop-blur-sm">
+                                        <div class="flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-blue-500/20 pb-4 md:pb-0 md:pr-8">
+                                            <div class="text-3xl md:text-4xl font-bold text-red-500 mb-2">
+                                                ${item.stat}
+                                            </div>
+                                            <div class="text-[10px] uppercase opacity-50 text-center">
+                                                Critical
+                                            </div>
+                                        </div>
+                                        <div class="pt-4 md:pt-0">
+                                            <h3 class="text-xl md:text-2xl font-semibold mb-3">
+                                                ${item.label}
+                                            </h3>
+                                            <p class="text-sm md:text-base opacity-70 leading-relaxed">
+                                                ${item.text}
+                                            </p>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                
+                case 'solution':
+                    return `
+                        <div class="slide-enter">
+                            <h2 class="text-xs tracking-widest uppercase text-blue-400 mb-8 md:mb-12 font-semibold">
+                                ${slide.headline}
+                            </h2>
+                            <p class="text-2xl md:text-3xl leading-relaxed mb-12 md:mb-16 max-w-5xl opacity-90">
+                                ${slide.content}
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                ${slide.features.map(feature => `
+                                    <div class="bg-blue-500/5 border border-blue-500/20 rounded-xl p-6 md:p-8">
+                                        <div class="text-4xl mb-4">${feature.icon}</div>
+                                        <h3 class="text-lg font-semibold mb-3">${feature.title}</h3>
+                                        <p class="text-sm opacity-60 leading-relaxed">${feature.desc}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                
+                case 'market':
+                    return `
+                        <div class="slide-enter">
+                            <h2 class="text-xs tracking-widest uppercase text-blue-400 mb-8 md:mb-14 font-semibold">
+                                ${slide.headline}
+                            </h2>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                                ${slide.metrics.map(metric => `
+                                    <div class="bg-white/5 border border-blue-500/20 rounded-xl p-6 md:p-8">
+                                        <div class="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                                            ${metric.value}
+                                        </div>
+                                        <div class="text-sm font-semibold mb-2 uppercase tracking-wide">
+                                            ${metric.label}
+                                        </div>
+                                        <div class="text-xs opacity-50 mb-3">${metric.desc}</div>
+                                        <div class="text-xs text-green-400 font-semibold uppercase">
+                                            ${metric.growth}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                
+                case 'product':
+                    return `
+                        <div class="slide-enter">
+                            <h2 class="text-xs tracking-widest uppercase text-blue-400 mb-8 md:mb-14 font-semibold">
+                                ${slide.headline}
+                            </h2>
+                            <div class="flex flex-col md:flex-row gap-8 md:gap-12 mb-12 md:mb-14">
+                                ${slide.steps.map((step, i) => `
+                                    <div class="flex-1 relative">
+                                        <div class="text-6xl md:text-7xl font-extralight text-blue-500/20 mb-6">
+                                            ${step.num}
+                                        </div>
+                                        <h3 class="text-xl font-semibold mb-4">${step.title}</h3>
+                                        <p class="text-sm opacity-60 leading-relaxed">${step.desc}</p>
+                                        ${i < slide.steps.length - 1 ? `
+                                            <div class="hidden md:block absolute -right-6 top-10 text-2xl opacity-30">→</div>
+                                        ` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="flex flex-col md:flex-row gap-4 pt-8 border-t border-blue-500/20">
+                                ${slide.benefits.map(benefit => `
+                                    <div class="flex-1 p-4 md:p-5 bg-green-500/10 border border-green-500/30 rounded-lg text-sm font-semibold text-center text-green-400">
+                                        ✓ ${benefit}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                
+                case 'business':
+                    return `
+                        <div class="slide-enter">
+                            <h2 class="text-xs tracking-widest uppercase text-blue-400 mb-8 md:mb-12 font-semibold">
+                                ${slide.headline}
+                            </h2>
+                            <p class="text-2xl md:text-3xl mb-12 md:mb-14 max-w-4xl">${slide.model}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                ${slide.economics.map(item => `
+                                    <div class="bg-blue-500/5 border border-blue-500/20 rounded-xl p-6 md:p-8">
+                                        <div class="text-[10px] tracking-widest uppercase opacity-50 mb-4">
+                                            ${item.metric}
+                                        </div>
+                                        <div class="text-2xl md:text-3xl font-bold mb-3">${item.value}</div>
+                                        <div class="text-xs text-green-400 font-semibold">
+                                            ${item.margin} margin
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                
+                case 'traction':
+                    return `
+                        <div class="slide-enter">
+                            <h2 class="text-xs tracking-widest uppercase text-blue-400 mb-8 md:mb-14 font-semibold">
+                                ${slide.headline}
+                            </h2>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-14">
+                                ${slide.metrics.map(metric => `
+                                    <div class="p-6 md:p-8 bg-white/5 border border-blue-500/20 rounded-xl">
+                                        <div class="text-5xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
+                                            ${metric.value}
+                                        </div>
+                                        <div class="text-sm mb-2 font-semibold">${metric.label}</div>
+                                        <div class="text-xs opacity-60">${metric.growth}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="pt-8 border-t border-blue-500/20">
+                                <div class="text-[10px] tracking-widest uppercase opacity-50 mb-6">
+                                    Key Milestones Achieved
+                                </div>
+                                <div class="flex flex-col gap-4">
+                                    ${slide.milestones.map(milestone => `
+                                        <div class="flex items-center gap-4 text-base">
+                                            <span class="w-6 h-6 bg-green-500/20 border-2 border-green-400 rounded-full flex items-center justify-center text-xs text-green-400 font-bold">
+                                                ✓
+                                            </span>
+                                            ${milestone}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                
+                case 'financials':
+                    return `
+                        <div class="slide-enter">
+                            <h2 class="text-xs tracking-widest uppercase text-blue-400 mb-8 md:mb-14 font-semibold">
+                                ${slide.headline}
+                            </h2>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                ${slide.years.map((year, i) => `
+                                    <div class="rounded-xl p-6 md:p-8 ${
+                                        i === 2 
+                                            ? 'bg-blue-500/10 border-2 border-blue-500/40' 
+                                            : 'bg-white/5 border border-white/10'
+                                    }">
+                                        <div class="text-[10px] tracking-widest uppercase opacity-50 mb-5">
+                                            ${year.year}
+                                        </div>
+                                        <div class="text-4xl md:text-5xl font-bold mb-3 ${i === 2 ? 'text-blue-400' : ''}">
+                                            ${year.revenue}
+                                        </div>
+                                        <div class="text-sm opacity-60 mb-4">${year.hospitals}</div>
+                                        <div class="text-xs text-green-400 font-semibold">
+                                            ${year.margin} gross margin
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                
+                case 'team':
+                    return `
+                        <div class="slide-enter">
+                            <h2 class="text-xs tracking-widest uppercase text-blue-400 mb-8 md:mb-14 font-semibold">
+                                ${slide.headline}
+                            </h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                                ${slide.members.map(member => `
+                                    <div class="p-6 md:p-8 bg-white/5 border border-blue-500/20 rounded-xl">
+                                        <div class="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-blue-500/20 to-purple-500/20 border-2 border-blue-500/30 rounded-full mb-6 flex items-center justify-center text-2xl md:text-3xl">
+                                            👤
+                                        </div>
+                                        <div class="text-[10px] tracking-widest uppercase text-blue-400 mb-2 font-semibold">
+                                            ${member.role}
+                                        </div>
+                                        <div class="text-lg md:text-xl mb-3 font-semibold">${member.name}</div>
+                                        <div class="text-sm opacity-70 leading-relaxed">${member.credential}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                
+                case 'ask':
+                    return `
+                        <div class="text-center slide-enter">
+                            <h2 class="text-xs tracking-widest uppercase text-blue-400 mb-8 md:mb-12 font-semibold">
+                                ${slide.headline}
+                            </h2>
+                            <div class="text-5xl md:text-7xl font-bold mb-12 md:mb-14 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                                ${slide.amount}
+                            </div>
+                            <div class="flex flex-col md:flex-row justify-center gap-6 md:gap-8 mb-12 md:mb-14">
+                                ${slide.use.map(item => `
+                                    <div class="p-6 md:p-8 bg-blue-500/5 border border-blue-500/20 rounded-xl min-w-[200px]">
+                                        <div class="text-3xl md:text-4xl font-bold mb-3 text-blue-400">
+                                            ${item.allocation}
+                                        </div>
+                                        <div class="text-sm opacity-70">${item.purpose}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="max-w-3xl mx-auto p-6 md:p-8 bg-white/5 border border-blue-500/20 rounded-xl">
+                                <div class="text-base md:text-lg mb-4">${slide.outcome}</div>
+                            </div>
+                        </div>
+                    `;
+                
+                case 'close':
+                    return `
+                        <div class="text-center slide-enter">
+                            <h1 class="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-slate-50 to-blue-400 bg-clip-text text-transparent">
+                                ${slide.headline}
+                            </h1>
+                            <p class="text-lg md:text-xl opacity-70 mb-12 max-w-4xl mx-auto leading-relaxed">
+                                ${slide.tagline}
+                            </p>
+                            <div class="text-sm opacity-50 mb-8">${slide.contact}</div>
+                            <button class="px-8 md:px-12 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg text-base font-semibold cursor-pointer hover:scale-105 transition-transform">
+                                Join us in saving 500,000 lives per year
+                            </button>
+                        </div>
+                    `;
+                
+                default:
+                    return `<div>Slide type not found</div>`;
+            }
+        }
+
+        // Render slide navigation dots
+        function renderSlideDots() {
+            slideDots.innerHTML = '';
+            slides.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.className = `h-2 rounded transition-all ${i === currentSlide ? 'w-8 md:w-10 bg-gradient-to-r from-blue-500 to-purple-600' : 'w-2 bg-white/20'}`;
+                dot.addEventListener('click', () => goToSlide(i));
+                slideDots.appendChild(dot);
+            });
+        }
+
+        // Update slide display
+        function updateSlide() {
+            // Hide all slides
+            document.querySelectorAll('[id^="slide-"]').forEach(slide => {
+                slide.classList.add('hidden');
+            });
+            
+            // Show current slide
+            const currentSlideElement = document.getElementById(`slide-${currentSlide}`);
+            if (currentSlideElement) {
+                currentSlideElement.classList.remove('hidden');
+            }
+            
+            // Update counter
+            slideCounter.textContent = `${String(currentSlide + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+            
+            // Update dots
+            document.querySelectorAll('#slideDots button').forEach((dot, i) => {
+                dot.className = `h-2 rounded transition-all ${i === currentSlide ? 'w-8 md:w-10 bg-gradient-to-r from-blue-500 to-purple-600' : 'w-2 bg-white/20'}`;
+            });
+            
+            // Update notes
+            notesContent.textContent = slides[currentSlide].notes || '';
+            
+            // Update button states
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            
+            // Update button styles
+            prevBtn.className = `px-4 md:px-7 py-3 text-xs tracking-wider uppercase rounded-lg border font-semibold transition-all ${
+                currentSlide === 0
+                    ? 'bg-transparent border-blue-500/30 opacity-30 cursor-not-allowed'
+                    : 'bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20'
+            }`;
+            
+            nextBtn.className = `px-4 md:px-7 py-3 text-xs tracking-wider uppercase rounded-lg border font-semibold transition-all ${
+                currentSlide === slides.length - 1
+                    ? 'bg-transparent border-blue-500/30 opacity-30 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-blue-500 to-purple-600 border-transparent hover:opacity-90'
+            }`;
+        }
+
+        // Navigate to specific slide
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlide();
+        }
+
+        // Next slide
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        // Previous slide
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        // Toggle notes panel
+        function toggleNotesPanel() {
+            showNotes = !showNotes;
+            notesPanel.classList.toggle('hidden', !showNotes);
+            toggleNotes.classList.toggle('bg-blue-500/20', showNotes);
+            toggleNotes.classList.toggle('border-blue-500/30', showNotes);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            toggleNotes.addEventListener('click', toggleNotesPanel);
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    nextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                } else if (e.key === 'n' || e.key === 'N') {
+                    toggleNotesPanel();
+                }
+            });
+            
+            // Close notes when clicking outside
+            document.addEventListener('click', (e) => {
+                if (showNotes && 
+                    !notesPanel.contains(e.target) && 
+                    !toggleNotes.contains(e.target)) {
+                    toggleNotesPanel();
+                }
+            });
+        }
+
+        // Initialize the presentation
+        init();
+    </script>
+</body>
+</html>
