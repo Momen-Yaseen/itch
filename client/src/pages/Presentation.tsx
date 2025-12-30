@@ -6,10 +6,17 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useSubmitContact } from "@/hooks/use-contact";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertContactRequestSchema, type InsertContactRequest } from "@shared/schema";
+import { z } from "zod";
+
+const contactFormSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
+type ContactFormData = z.infer<typeof contactFormSchema>;
 import { 
   Activity, 
   Brain, 
@@ -25,26 +32,34 @@ import {
 // --- Slides ---
 
 const IntroSlide = () => (
-  <div className="slide-container bg-gradient-to-br from-slate-50 to-slate-100">
-    <div className="max-w-4xl text-center space-y-8">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+  <div className="slide-container flex flex-row w-full justify-between items-center  relative overflow-hidden">
+    {/* Background image on the left */}
+    <img 
+      src="/Picture1.png" 
+      alt="Background" 
+      className="  h-full w-auto  z-10 "
+    />
+    
+    <div className="max-w-4xl mx-[5rem] text-center space-y-4 relative z-10 ">
+
+       <motion.h1 
+        className=" md:text-7xl font-bold text-[#004aad] leading-tight  my-0 "
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="inline-block p-4 rounded-3xl bg-white shadow-xl shadow-primary/10 mb-8"
+        transition={{ delay: 0.3 }}
       >
-        <BrandLogo />
-      </motion.div>
+        Neurobotix Tech
+      </motion.h1>
       
-      <motion.h1 
-        className="text-5xl md:text-7xl font-bold text-slate-900 leading-tight"
+      <motion.h3 
+        className=" md:text-[30px] font-bold text-slate-900 leading-tight my-0"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
         Reinventing Neurovascular <br/>
         <span className="text-gradient">Interventions</span>
-      </motion.h1>
+      </motion.h3>
       
       <motion.p 
         className="text-xl md:text-2xl text-slate-500 font-light"
@@ -62,39 +77,84 @@ const ProblemSlide = () => (
   <div className="slide-container">
     <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl w-full">
       <div className="space-y-6">
-        <h2 className="text-4xl font-bold text-slate-900">The Problem: <br/><span className="text-red-500">A Silent Killer</span></h2>
-        <p className="text-lg text-slate-600 leading-relaxed">
-          Neurovascular diseases like thrombosis and brain aneurysms are devastating. An aneurysm ruptures every 18 minutes.
-        </p>
-        <div className="grid grid-cols-2 gap-4 mt-8">
+        {/* <h2 className="text-4xl font-bold text-slate-900">The Problem: <br/><span className="text-red-500">A Silent Killer</span></h2> */}
+        <h2 className="text-4xl font-bold text-slate-900">Brain Aneurysms</h2>
+        
+        <div className="grid grid-cols-3 gap-4 mt-8">
           <div className="p-6 bg-red-50 rounded-2xl border border-red-100">
-            <h3 className="text-3xl font-bold text-red-600">15-18M</h3>
+            <h3 className="text-3xl font-bold text-red-600">+100M</h3>
             <p className="text-sm text-red-700 mt-1">People affected</p>
           </div>
           <div className="p-6 bg-red-50 rounded-2xl border border-red-100">
             <h3 className="text-3xl font-bold text-red-600">50%</h3>
             <p className="text-sm text-red-700 mt-1">Fatality Rate</p>
           </div>
+          <div className="p-6 bg-red-50 rounded-2xl border border-red-100">
+            <h3 className="text-3xl font-bold text-red-600">15%</h3>
+            <p className="text-sm text-red-700 mt-1">Lack of Access</p>
+          </div>
         </div>
       </div>
-      <div className="relative h-[400px] bg-slate-100 rounded-3xl overflow-hidden shadow-2xl">
+      <div className="relative h-[400px] rounded-3xl overflow-hidden shadow-2xl">
         {/* Abstract representation of brain/vessels */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+        <div className="absolute bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
           <Activity size={120} className="text-slate-400 opacity-20" />
         </div>
         <img 
-          src="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=800" 
+          src="/Picture2.png" 
           alt="Medical Imaging" 
-          className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-50"
+          className="absolute inset-0 w-full h-full object-cover mix-blend-overlay "
         />
         <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent text-white">
-          <p className="font-medium">Complex Vasculature Challenges</p>
+          <p className="font-medium">A Growing Global Health Crisis</p>
         </div>
       </div>
     </div>
   </div>
 );
-
+const Problem2Slide = () => (
+  <div className="slide-container">
+    <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl w-full">
+      <div className="relative h-[400px] rounded-3xl overflow-hidden shadow-2xl">
+        {/* Abstract representation of brain/vessels */}
+        <div className="absolute bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+          <Activity size={120} className="text-slate-400 opacity-20" />
+        </div>
+        <img 
+          src="/Picture4.png" 
+          alt="Medical Imaging" 
+          className="absolute inset-0 w-full h-full object-cover mix-blend-overlay "
+        />
+        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent text-white">
+          <p className="font-medium">A Growing Global Health Crisis</p>
+        </div>
+      </div>
+     <div className="space-y-6">
+        <h2 className="text-4xl font-bold text-slate-900">Neurovascular Diseases</h2>
+        
+    
+        <div className="grid grid-rows-3 gap-4 mt-8">
+          <div className="p-3 bg-red-50 rounded-2xl border border-red-100 flex flex-row items-center justify-start gap-5">
+            <img src="/Picture10.png" className="w-16 h-16" alt="" />
+            <h3 className="text-xl font-bold text-red-600">Thrombosis</h3>
+            
+          </div>
+             <div className="p-3 bg-red-50 rounded-2xl border border-red-100 flex flex-row items-center justify-start gap-5">
+            <img src="/bra.png" className="w-16 h-16" alt="" />
+            <h3 className="text-xl font-bold text-red-600">Brain Aneurysms</h3>
+            
+          </div>
+             <div className="p-3 bg-red-50 rounded-2xl border border-red-100 flex flex-row items-center justify-start gap-5">
+            <img src="/arti.jpeg" className="w-16 h-16" alt="" />
+            <h3 className="text-xl font-bold text-red-600">Arteriovenous malformations</h3>
+            
+          </div>
+        </div>
+      </div>
+     
+    </div>
+  </div>
+);
 const StatisticsSlide = () => (
   <div className="slide-container bg-slate-900 text-white">
     <div className="absolute inset-0 overflow-hidden">
@@ -125,7 +185,36 @@ const StatisticsSlide = () => (
     </div>
   </div>
 );
-
+const TreatmentLimitationSlide = () => (
+  <div className="slide-container">
+    <div className="grid md:grid-cols-1 gap-12 items-center max-w-6xl w-full">
+      
+     <div className="space-y-20 text-center">
+        <h2 className="text-4xl font-bold text-slate-900">Treatment Limitations</h2>
+        
+    
+        <div className="grid grid-cols-3  gap-4 mt-8">
+          <div className="p-3 bg-red-50 rounded-2xl border border-red-100 flex flex-row w-fit mx-auto px-10 items-center justify-center gap-5">
+            <img src="/thinking.png" className="w-16 h-16" alt="" />
+            <h3 className="text-xl font-bold text-red-600">Arteriovenous malformations</h3>
+            
+          </div>
+             <div className="p-3 bg-red-50 rounded-2xl border border-red-100 flex flex-row w-fit mx-auto px-10 items-center justify-center gap-5">
+            <img src="/catheter.png" className="w-16 h-16" alt="" />
+            <h3 className="text-xl font-bold text-red-600">Arteriovenous malformations</h3>
+            
+          </div>
+          <div className="p-3 bg-red-50 rounded-2xl border border-red-100 flex flex-row w-fit mx-auto px-10 items-center justify-center gap-5">
+            <img src="/time.png" className="w-16 h-16" alt="" />
+            <h3 className="text-xl font-bold text-red-600">Arteriovenous malformations</h3>
+            
+          </div>
+        </div>
+      </div>
+     
+    </div>
+  </div>
+);
 const SolutionSoftwareSlide = () => (
   <div className="slide-container">
     <div className="max-w-6xl w-full flex flex-col md:flex-row gap-12">
@@ -180,43 +269,72 @@ const SolutionSoftwareSlide = () => (
 const SolutionHardwareSlide = () => (
   <div className="slide-container bg-slate-50">
     <div className="max-w-6xl w-full">
-      <div className="text-center mb-12">
+      <div className="text-center mb-4">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-50 text-purple-600 font-medium text-sm mb-4">
           <Target size={16} /> Hardware Solution
         </div>
         <h2 className="text-4xl font-bold text-slate-900">Robotics & Automation</h2>
       </div>
-      
-      <div className="grid md:grid-cols-3 gap-6">
-        {[
-          { title: "Fully/Semi-Autonomous", desc: "Precise navigation through tortuous vessels" },
-          { title: "AI Path Planning", desc: "Optimal routing avoiding critical areas" },
-          { title: "Haptic Feedback", desc: "Tactile sensation for the surgeon" }
-        ].map((card, i) => (
-          <div key={i} className="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 hover:-translate-y-2 transition-transform duration-300">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-cyan-400 mb-6" />
-            <h3 className="text-xl font-bold text-slate-900 mb-3">{card.title}</h3>
-            <p className="text-slate-500">{card.desc}</p>
-          </div>
-        ))}
-      </div>
 
-      <div className="mt-12 h-64 bg-slate-200 rounded-3xl flex items-center justify-center relative overflow-hidden">
-        {/* Placeholder for Robot Image */}
-        <img 
-          src="https://pixabay.com/get/ge0b56173734a6e5574333509c38951daeea890f6a4eeb97fcc27b48179357314b32725a5757f7f172570cfce335371ab6e999526f9ff42fb007b39822bfb8d1a_1280.jpg" 
-          alt="Robotic Arm" 
-          className="absolute inset-0 w-full h-full object-cover opacity-60"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-200 via-transparent to-slate-200" />
-        <p className="relative z-10 font-bold text-slate-700 text-xl bg-white/80 px-6 py-3 rounded-full backdrop-blur-sm">
-          Precision Robotic Catheterization
-        </p>
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 items-stretch">
+        {[
+          { img: "/auto.jpeg", title: "Fully/Semi-Autonomous", desc: "Precise navigation through tortuous vessels", card: "/Picture5.png" },
+          { img: "/path.png", title: "AI Path Planning", desc: "Optimal routing avoiding critical areas", card: "/Picture19.png" },
+          { img: "/digital.jpg", title: "Digital Twin", desc: "Tactile sensation for the surgeon", card: "/Picture18.png" },
+        ].map((card, i) => (
+          <article key={i} className="flex flex-col bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div className="h-48 md:h-64 w-full overflow-hidden bg-slate-100">
+              <img src={card.card} alt={`${card.title} visual`} className="w-full h-full object-cover" />
+            </div>
+
+            <div className="p-6 flex-1 flex flex-col">
+              <div className="flex items-center gap-4 mb-4">
+                <img src={card.img} alt={card.title} className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-slate-900">{card.title}</h3>
+                  <p className="text-sm text-slate-500 mt-1">{card.desc}</p>
+                </div>
+              </div>
+
+              
+            </div>
+          </article>
+        ))}
       </div>
     </div>
   </div>
 );
-
+const UniqueValueSlide = () => (
+  <div className="slide-container bg-gradient-to-b from-white to-slate-50">
+    <div className="max-w-6xl w-full text-center">
+      <h2 className="text-4xl font-bold text-slate-900 mb-16">Why Neurobotix?</h2>
+      <div className="grid md:grid-cols-3 gap-8">
+        {[
+          { icon: Target, title: "Precision", text: "Sub-millimeter accuracy in navigation", sub: "99.2% navigation accuracy" },
+          { icon: ShieldCheck, title: "Safety", text: "Reduced radiation exposure for surgeons", sub: "30-60% less radiation"  },
+          { icon: TrendingUp, title: "Scalability", text: "Standardized procedures across hospitals", sub: "50-83% faster procedures" }
+        ].map((item, i) => (
+        <div className="flex flex-col gap-4">
+          
+        <div key={i} className="p-8 bg-white rounded-3xl h-64  shadow-xl shadow-slate-200/50 border border-slate-100">
+            <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6">
+              <item.icon size={32} />
+            </div>
+            <h3 className="text-2xl font-bold text-slate-900 mb-3">{item.title}</h3>
+            <p className="text-slate-500">{item.text}</p>
+          
+          </div>
+            <div key={i} className="p-3 bg-green-200/20 rounded-3xl shadow-xl shadow-slate-200/50 border border-green-600">
+           
+            <h3 className="text-lg p-0 font-semibold text-green-600 ">{item.sub}</h3>
+           
+          </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
 const MarketSlide = () => (
   <div className="slide-container">
     <div className="max-w-5xl w-full grid md:grid-cols-2 gap-16 items-center">
@@ -228,27 +346,26 @@ const MarketSlide = () => (
             <p className="text-xl text-slate-600 mt-2 font-medium">Global Market Size</p>
             <p className="text-slate-400 mt-1">Projected CAGR of 8.5%</p>
           </div>
-          <div className="h-px bg-slate-200 w-full" />
-          <div>
-            <h3 className="text-5xl font-bold text-slate-800">1.8M</h3>
+          <div className="h-px  bg-slate-200 w-full" />
+         <div className="grid grid-cols-2 gap-4"> <div>
+            <h3 className="text-5xl col-span-1 font-bold text-slate-800">1.8M</h3>
             <p className="text-xl text-slate-600 mt-2 font-medium">Patients in GCC</p>
-            <p className="text-slate-400 mt-1">High prevalence of risk factors</p>
+          </div>
+          <div>
+            <h3 className="text-5xl font-bold col-span-1 text-slate-800">15M</h3>
+            <p className="text-xl text-slate-600 mt-2 font-medium">Patients in EU</p>
+          </div>
+                    <p className="col-span-2 text-slate-400 text-start">High prevalence of risk factors</p>
+
           </div>
         </div>
       </div>
-      <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100">
-        <Globe className="w-16 h-16 text-primary mb-6" />
-        <h3 className="text-2xl font-bold text-slate-900 mb-4">Regional Focus</h3>
-        <p className="text-slate-600 leading-relaxed mb-6">
-          Starting with the GCC region where diabetes and hypertension rates drive high neurovascular disease prevalence, expanding globally thereafter.
-        </p>
-        <div className="flex gap-2">
-           {["Qatar", "UAE", "KSA"].map(c => (
-             <span key={c} className="px-3 py-1 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-600">
-               {c}
-             </span>
-           ))}
-        </div>
+      <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100 flex flex-row items-center justify-center ">
+        <Globe className="w-32 h-32 text-primary mb-6" />
+        <h3 className="text-5xl font-bold text-slate-900 mb-4 whitespace-nowrap">+100M Patients</h3>
+
+      
+
       </div>
     </div>
   </div>
@@ -281,13 +398,20 @@ const TractionSlide = () => (
   <div className="slide-container">
     <div className="max-w-5xl w-full text-center">
       <h2 className="text-4xl font-bold text-slate-900 mb-16">Strategic Partners</h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-        {["HMC", "QBRI", "Sidra Medicine", "Qatar University"].map((partner, i) => (
-          <div key={i} className="aspect-square bg-slate-50 rounded-2xl flex items-center justify-center p-8 grayscale hover:grayscale-0 transition-all duration-300 hover:shadow-lg border border-transparent hover:border-slate-200">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+        {[{
+          name:"HMC", logo:"./hhamad.jpeg"
+        },{
+          name:"Sidra Medicine", logo:"./SIDRA.jpeg"
+        },{
+          name:"Biomedical Research Center", logo:"./QU.jpeg"
+        },].map((partner, i) => (
+          <div key={i} className="aspect-square bg-slate-50 rounded-2xl flex flex-col items-center justify-center p-8 gap-5  hover:grayscale-0 transition-all duration-300 hover:shadow-lg border border-transparent hover:border-slate-200">
             {/* Placeholder for Logos */}
+                          <img src={partner.logo} alt={partner.name} className="max-h-32 min-h-32 rounded-full mx-auto mb-4 object-contain" />
+
             <div className="text-center">
-              <div className="w-12 h-12 bg-slate-300 rounded-full mx-auto mb-3" />
-              <span className="font-bold text-slate-400">{partner}</span>
+              <span className="font-bold text-slate-400">{partner.name}</span>
             </div>
           </div>
         ))}
@@ -300,13 +424,12 @@ const BusinessModelSlide = () => (
   <div className="slide-container bg-slate-900 text-white">
     <div className="max-w-5xl w-full">
       <h2 className="text-4xl font-bold mb-16 text-center">Business Model</h2>
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-3 gap-8">
         <div className="p-10 rounded-3xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-4 bg-primary text-white rounded-bl-2xl font-bold text-sm">
             Hardware
           </div>
-          <h3 className="text-3xl font-bold mb-2">HaaS</h3>
-          <p className="text-slate-400 mb-8">Hardware as a Service</p>
+          <h3 className="text-2xl font-bold mb-2">Robotic Platform</h3>
           <div className="text-5xl font-bold text-primary mb-2">$500k</div>
           <p className="text-slate-400">Per System / One-time</p>
         </div>
@@ -315,10 +438,17 @@ const BusinessModelSlide = () => (
           <div className="absolute top-0 right-0 p-4 bg-cyan-500 text-white rounded-bl-2xl font-bold text-sm">
             Recurring
           </div>
-          <h3 className="text-3xl font-bold mb-2">SaaS</h3>
-          <p className="text-slate-400 mb-8">Software Subscription</p>
-          <div className="text-5xl font-bold text-cyan-400 mb-2">$25k</div>
-          <p className="text-slate-400">Annual License</p>
+          <h3 className="text-2xl font-bold my-2">Magnetic Catheter</h3>
+          <div className="text-5xl font-bold text-cyan-400 mb-2">$3k</div>
+          <p className="text-slate-400">Annual Purchase</p>
+        </div>
+          <div className="p-10 rounded-3xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 bg-primary text-white rounded-bl-2xl font-bold text-sm">
+            Reccuring
+          </div>
+          <h3 className="text-2xl font-bold mb-2">Service Contract</h3>
+          <div className="text-5xl font-bold text-primary mb-2">$25k</div>
+          <p className="text-slate-400">Annual Subscription</p>
         </div>
       </div>
     </div>
@@ -394,6 +524,61 @@ const FinancialsSlide = () => (
   </div>
 );
 
+const GoToMarketSlide = () => (
+  <div className="slide-container">
+    <div className="max-w-6xl w-full text-center">
+      <h2 className="text-4xl font-bold text-slate-900 mb-2">Go-To-Market</h2>
+       <div className="md:col-span-1 pt-8 overflow-visible">
+          <p className="text-lg text-slate-700 overflow-visible leading-relaxed text-nowrap z-50 mb-4">
+            Centralized early markets to de-risk adoption → enable faster scale into high-volume regions.
+          </p>
+        </div>
+      <div className="gap-12 items-start">
+        {/* Left content */}
+       
+
+        {/* Center SVG arrow visualization with absolute info boxes */}
+        <div className="max-w-[85%] mx-auto flex flex-col items-center justify-center relative">
+          <div className="flex gap-2 items-center justify-center" >
+       
+             <span  className="px-3 py-1 bg-white border border-slate-200 rounded-lg text-xl font-medium text-slate-600">
+             Qatar
+             </span>
+        →
+            <span  className="px-3 py-1 bg-white border border-slate-200 rounded-lg text-xl font-medium text-slate-600">
+             GCC
+             </span>
+              →
+              <span  className="px-3 py-1 bg-white border border-slate-200 rounded-lg text-xl font-medium text-slate-600">
+             EU
+             </span>
+        </div>
+          {/* Absolutely positioned info boxes */}
+          <div className=" space-y-3  flex flex-row justify-center items-center w-fit gap-6">
+            {/* Initial Customers */}
+            <div className="p-4 bg-blue-100 rounded-xl border mt-4 border-blue-200 shadow-md">
+              <h3 className="text-lg font-bold text-blue-600 mb-2">Initial Customers</h3>
+              <p className="text-sm text-slate-700">Angio Cath-Labs in hospitals.</p>
+            </div>
+            
+            {/* Primary Users */}
+            <div className="p-4 bg-blue-100 rounded-xl border border-blue-300 shadow-md">
+              <h3 className="text-lg font-bold text-blue-700 mb-2">Primary Users</h3>
+              <p className="text-sm text-slate-700">Neurosurgeons.</p>
+            </div>
+            
+            {/* Economic Buyer */}
+            <div className="p-4 bg-blue-100 rounded-xl border border-primary shadow-md">
+              <h3 className="text-lg font-bold text-primary mb-2">Economic Buyer</h3>
+              <p className="text-sm text-slate-700">Hospitals. Private clinics.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const AskSlide = () => (
   <div className="slide-container bg-slate-900 text-white">
     <div className="max-w-4xl w-full text-center">
@@ -427,19 +612,20 @@ const AskSlide = () => (
 );
 
 const ContactSlide = () => {
-  const submit = useSubmitContact();
-  const form = useForm<InsertContactRequest>({
-    resolver: zodResolver(insertContactRequestSchema),
+  const form = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
     defaultValues: {
+      name: "",
       email: "",
       message: ""
     }
   });
 
-  const onSubmit = (data: InsertContactRequest) => {
-    submit.mutate(data, {
-      onSuccess: () => form.reset()
-    });
+  const onSubmit = (data: ContactFormData) => {
+    // For now, just show a success message
+    console.log("Form data:", data);
+    alert("Thank you for your interest! We will be in touch shortly.");
+    form.reset();
   };
 
   return (
@@ -460,6 +646,16 @@ const ContactSlide = () => {
         <div className="glass-panel p-8 rounded-3xl">
           <h3 className="text-xl font-bold mb-4 text-slate-900">Get in touch</h3>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div>
+              <Input 
+                placeholder="Your Name" 
+                {...form.register("name")}
+                className="bg-white/50 border-slate-200"
+              />
+              {form.formState.errors.name && (
+                <p className="text-red-500 text-sm mt-1">{form.formState.errors.name.message}</p>
+              )}
+            </div>
             <div>
               <Input 
                 placeholder="Your Email" 
@@ -483,9 +679,8 @@ const ContactSlide = () => {
             <Button 
               type="submit" 
               className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl h-12 text-lg font-medium shadow-lg shadow-primary/20"
-              disabled={submit.isPending}
             >
-              {submit.isPending ? "Sending..." : "Send Message"}
+              Send Message
             </Button>
           </form>
         </div>
@@ -502,12 +697,15 @@ export default function Presentation() {
 
   const slides = [
     IntroSlide,
+    Problem2Slide,
     ProblemSlide,
     StatisticsSlide,
+    TreatmentLimitationSlide,
     SolutionSoftwareSlide,
     SolutionHardwareSlide,
+    UniqueValueSlide,
     MarketSlide,
-    ValuePropSlide,
+    GoToMarketSlide,
     TractionSlide,
     BusinessModelSlide,
     TeamSlide,

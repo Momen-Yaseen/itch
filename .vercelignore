@@ -1,0 +1,12 @@
+node_modules
+.git
+server
+shared
+**/*.log
+dist/.cache
+.DS_Store
+/.env
+/.env.*
+README.md
+build
+coverage
